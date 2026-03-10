@@ -533,14 +533,5 @@ GET /api/products?category=Laptop&minPrice=10000000&maxPrice=30000000&sort=-rati
 | GET | `/api/chat/conversations` | Lấy tất cả conversations | Admin |
 | GET | `/api/chat/stats` | Thống kê chat | Admin |
 
-**Note:** Chat hỗ trợ cả guest users (không cần đăng nhập) và logged-in users. Guest users sử dụng sessionId để quản lý conversation.
-```
-
-Phần cập nhật này bao gồm:
-- Bảng format rõ ràng hơn cho từng endpoint
-- Thêm chi tiết về query parameters
-- Ví dụ cụ thể cho API call
-- Giải thích về order status
-- Lưu ý đặc biệt về chat hỗ trợ guest users
 
 Bạn có thể thay thế phần API Endpoints trong README bằng nội dung này để có tài liệu đầy đủ và chi tiết hơn.
