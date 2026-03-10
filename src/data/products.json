@@ -1,0 +1,725 @@
+[
+  {
+    "name": "MacBook Pro 14 M3 Pro 2024",
+    "description": "Laptop cao cấp từ Apple với chip M3 Pro mạnh mẽ, màn hình Liquid Retina XDR 14.2 inch, RAM 18GB, SSD 512GB. Thiết kế sang trọng, hiệu năng vượt trội cho công việc chuyên nghiệp.",
+    "price": 52990000,
+    "originalPrice": 56990000,
+    "category": "Laptop",
+    "brand": "Apple",
+    "stock": 15,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/44/309017/macbook-pro-14-m3-2023-thumb-600x600.jpg",
+        "public_id": "macbook_pro_14_m3"
+      }
+    ],
+    "specifications": {
+      "CPU": "Apple M3 Pro 11-core",
+      "RAM": "18GB Unified Memory",
+      "Storage": "512GB SSD",
+      "Display": "14.2\" Liquid Retina XDR",
+      "Graphics": "M3 Pro 14-core GPU",
+      "Battery": "Up to 18 hours"
+    },
+    "features": ["Chip M3 Pro", "Màn hình XDR", "Touch ID", "MagSafe 3", "3x Thunderbolt 4"],
+    "isFeatured": true
+  },
+  {
+    "name": "iPhone 15 Pro Max 256GB",
+    "description": "Smartphone flagship từ Apple với chip A17 Pro 3nm, camera 48MP, màn hình Super Retina XDR 6.7 inch, khung titan cao cấp, Action Button mới.",
+    "price": 32990000,
+    "originalPrice": 34990000,
+    "category": "Phone",
+    "brand": "Apple",
+    "stock": 30,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-blue-thumbnew-600x600.jpg",
+        "public_id": "iphone_15_pro_max"
+      }
+    ],
+    "specifications": {
+      "Chip": "Apple A17 Pro",
+      "RAM": "8GB",
+      "Storage": "256GB",
+      "Display": "6.7\" Super Retina XDR",
+      "Camera": "48MP Main + 12MP Ultra Wide + 12MP Telephoto 5x",
+      "Battery": "4422 mAh"
+    },
+    "features": ["Chip A17 Pro 3nm", "Khung Titan", "Action Button", "Dynamic Island", "USB-C"],
+    "isFeatured": true
+  },
+  {
+    "name": "Samsung Galaxy S24 Ultra 12GB/256GB",
+    "description": "Flagship Android với S Pen tích hợp, camera 200MP siêu nét, màn hình Dynamic AMOLED 2X 6.8 inch 120Hz, chip Snapdragon 8 Gen 3 for Galaxy, Galaxy AI.",
+    "price": 29990000,
+    "originalPrice": 33990000,
+    "category": "Phone",
+    "brand": "Samsung",
+    "stock": 25,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/42/307174/samsung-galaxy-s24-ultra-grey-thumbnew-600x600.jpg",
+        "public_id": "galaxy_s24_ultra"
+      }
+    ],
+    "specifications": {
+      "Chip": "Snapdragon 8 Gen 3 for Galaxy",
+      "RAM": "12GB",
+      "Storage": "256GB",
+      "Display": "6.8\" Dynamic AMOLED 2X 120Hz",
+      "Camera": "200MP + 50MP + 12MP + 10MP",
+      "Battery": "5000 mAh"
+    },
+    "features": ["S Pen tích hợp", "Camera 200MP", "Galaxy AI", "Sạc nhanh 45W", "Bền bỉ Armor Aluminum"],
+    "isFeatured": true
+  },
+  {
+    "name": "Dell XPS 15 9530 i7 RTX 4060",
+    "description": "Laptop cao cấp cho đồ họa, thiết kế và sáng tạo nội dung. Intel Core i7-13700H, RTX 4060 8GB, màn hình OLED 3.5K cảm ứng, vỏ nhôm nguyên khối.",
+    "price": 45990000,
+    "originalPrice": 49990000,
+    "category": "Laptop",
+    "brand": "Dell",
+    "stock": 12,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/44/307534/dell-xps-15-9530-i7-71006512-121123-035959-600x600.jpg",
+        "public_id": "dell_xps_15"
+      }
+    ],
+    "specifications": {
+      "CPU": "Intel Core i7-13700H",
+      "RAM": "16GB DDR5",
+      "Storage": "512GB SSD NVMe",
+      "Display": "15.6\" OLED 3.5K Touch",
+      "Graphics": "NVIDIA RTX 4060 8GB",
+      "Battery": "86Wh"
+    },
+    "features": ["Màn hình OLED 3.5K", "RTX 4060", "Thunderbolt 4", "Wi-Fi 6E", "Vỏ nhôm CNC"],
+    "isFeatured": true
+  },
+  {
+    "name": "iPad Pro M2 11 inch WiFi 128GB",
+    "description": "Máy tính bảng cao cấp với chip M2 mạnh mẽ, hỗ trợ Apple Pencil 2, Magic Keyboard, màn hình Liquid Retina 120Hz ProMotion.",
+    "price": 21990000,
+    "originalPrice": 24990000,
+    "category": "Tablet",
+    "brand": "Apple",
+    "stock": 20,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/522/301795/ipad-pro-11-inch-m2-wifi-128gb-2022-thumb-600x600.jpeg",
+        "public_id": "ipad_pro_m2"
+      }
+    ],
+    "specifications": {
+      "Chip": "Apple M2",
+      "RAM": "8GB",
+      "Storage": "128GB",
+      "Display": "11\" Liquid Retina 120Hz",
+      "Camera": "12MP Wide + 10MP Ultra Wide",
+      "Battery": "Up to 10 hours"
+    },
+    "features": ["Chip M2", "ProMotion 120Hz", "Face ID", "USB-C Thunderbolt", "Apple Pencil 2"],
+    "isFeatured": true
+  },
+  {
+    "name": "ASUS ROG Zephyrus G14 2024",
+    "description": "Laptop gaming mỏng nhẹ với AMD Ryzen 9 8945HS, RTX 4060, màn hình OLED 2.8K 120Hz, pin 73Wh, trọng lượng chỉ 1.5kg.",
+    "price": 42990000,
+    "category": "Laptop",
+    "brand": "ASUS",
+    "stock": 10,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-laptop-asus-rog-zephyrus-g14-ga403ui-qs024w_02e6b6a79c3047238d1113c6e9f34d10_grande.png",
+        "public_id": "asus_rog_g14"
+      }
+    ],
+    "specifications": {
+      "CPU": "AMD Ryzen 9 8945HS",
+      "RAM": "32GB DDR5",
+      "Storage": "1TB SSD",
+      "Display": "14\" OLED 2.8K 120Hz",
+      "Graphics": "RTX 4060 8GB",
+      "Battery": "73Wh"
+    },
+    "features": ["OLED 2.8K", "Mỏng nhẹ 1.5kg", "AniMe Matrix", "Dolby Atmos", "MUX Switch"],
+    "isFeatured": false
+  },
+  {
+    "name": "Samsung Galaxy Tab S9 Ultra",
+    "description": "Máy tính bảng Android cao cấp nhất với màn hình AMOLED 14.6 inch khổng lồ, S Pen đi kèm, Snapdragon 8 Gen 2, pin 11200mAh.",
+    "price": 27990000,
+    "originalPrice": 31990000,
+    "category": "Tablet",
+    "brand": "Samsung",
+    "stock": 8,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/522/309816/samsung-galaxy-tab-s9-ultra-14-6-inch-thumb-600x600.jpg",
+        "public_id": "tab_s9_ultra"
+      }
+    ],
+    "specifications": {
+      "Chip": "Snapdragon 8 Gen 2",
+      "RAM": "12GB",
+      "Storage": "256GB",
+      "Display": "14.6\" Dynamic AMOLED 2X 120Hz",
+      "Camera": "13MP + 8MP",
+      "Battery": "11200 mAh"
+    },
+    "features": ["Màn hình 14.6 inch", "S Pen", "DeX Mode", "Chống nước IP68", "4 loa AKG"],
+    "isFeatured": false
+  },
+  {
+    "name": "Xiaomi 14 Ultra 16GB/512GB",
+    "description": "Smartphone camera phone với Leica, cảm biến 50MP Sony LYT-900, Snapdragon 8 Gen 3, màn hình AMOLED 2K 120Hz.",
+    "price": 24990000,
+    "category": "Phone",
+    "brand": "Xiaomi",
+    "stock": 18,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/42/329900/xiaomi-14-ultra-thumb-600x600.jpg",
+        "public_id": "xiaomi_14_ultra"
+      }
+    ],
+    "specifications": {
+      "Chip": "Snapdragon 8 Gen 3",
+      "RAM": "16GB",
+      "Storage": "512GB",
+      "Display": "6.73\" AMOLED 2K 120Hz",
+      "Camera": "4x 50MP Leica",
+      "Battery": "5000 mAh"
+    },
+    "features": ["4 camera 50MP", "Leica Optics", "Sạc nhanh 90W", "Sạc không dây 80W", "IP68"],
+    "isFeatured": false
+  },
+  {
+    "name": "AirPods Pro 2 USB-C",
+    "description": "Tai nghe true wireless cao cấp với chip H2, chống ồn chủ động ANC thế hệ 2, âm thanh không gian, sạc USB-C.",
+    "price": 5990000,
+    "originalPrice": 6490000,
+    "category": "Accessory",
+    "brand": "Apple",
+    "stock": 50,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/7077/289781/tai-nghe-bluetooth-airpods-pro-2-type-c-charge-apple-thumb-600x600.jpg",
+        "public_id": "airpods_pro_2"
+      }
+    ],
+    "specifications": {
+      "Chip": "Apple H2",
+      "ANC": "Active Noise Cancellation Gen 2",
+      "Battery": "Up to 6 hours",
+      "Charging": "USB-C + MagSafe + Qi",
+      "Water Resistance": "IPX4"
+    },
+    "features": ["Chip H2", "ANC thế hệ 2", "Spatial Audio", "Adaptive Audio", "USB-C"],
+    "isFeatured": false
+  },
+  {
+    "name": "Sony WH-1000XM5",
+    "description": "Tai nghe over-ear cao cấp với chống ồn tốt nhất thị trường, 8 micro chống ồn, pin 30 giờ, LDAC Hi-Res Audio.",
+    "price": 8990000,
+    "originalPrice": 9990000,
+    "category": "Accessory",
+    "brand": "Sony",
+    "stock": 30,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/54/289654/sony-wh-1000xm5-den-thumb-600x600.jpg",
+        "public_id": "sony_wh1000xm5"
+      }
+    ],
+    "specifications": {
+      "ANC": "8 microphones",
+      "Battery": "30 hours",
+      "Charging": "USB-C Quick charge",
+      "Codec": "LDAC, AAC, SBC",
+      "Connection": "Bluetooth 5.2"
+    },
+    "features": ["ANC cực tốt", "Pin 30 giờ", "LDAC Hi-Res", "Multipoint", "Gập gọn"],
+    "isFeatured": false
+  },
+  {
+    "name": "Logitech MX Master 3S",
+    "description": "Chuột không dây cao cấp cho năng suất, cảm biến 8K DPI, pin 70 ngày, kết nối đa thiết bị, cuộn MagSpeed.",
+    "price": 2490000,
+    "category": "Accessory",
+    "brand": "Logitech",
+    "stock": 45,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/86/247398/chuot-khong-day-logitech-mx-master-3s-den-thumb-600x600.jpg",
+        "public_id": "mx_master_3s"
+      }
+    ],
+    "specifications": {
+      "DPI": "8000 DPI",
+      "Battery": "Up to 70 days",
+      "Connectivity": "Bluetooth + Logi Bolt",
+      "Buttons": "7 buttons",
+      "Weight": "141g"
+    },
+    "features": ["8K DPI", "Pin 70 ngày", "MagSpeed", "Multi-device", "Ergonomic"],
+    "isFeatured": false
+  },
+  {
+    "name": "Keychron K8 Pro QMK/VIA",
+    "description": "Bàn phím cơ không dây 75% layout, hot-swappable, QMK/VIA programmable, switch Gateron, RGB backlight.",
+    "price": 2790000,
+    "category": "Accessory",
+    "brand": "Keychron",
+    "stock": 35,
+    "images": [
+      {
+        "url": "https://bizweb.dktcdn.net/thumb/grande/100/329/122/products/k8-pro-carbon-black-us-ansi-keychron-mechanical-keyboard-for-mac-windows-ios-android-gateron-g-pro-switch-red-1.jpg",
+        "public_id": "keychron_k8_pro"
+      }
+    ],
+    "specifications": {
+      "Layout": "75% (84 keys)",
+      "Switch": "Gateron G Pro",
+      "Connection": "Bluetooth 5.1 + USB-C",
+      "Battery": "4000 mAh",
+      "Backlight": "RGB"
+    },
+    "features": ["Hot-swappable", "QMK/VIA", "Mac & Windows", "RGB", "75% compact"],
+    "isFeatured": false
+  },
+  {
+    "name": "LG UltraGear 27GN950-B 4K 144Hz",
+    "description": "Màn hình gaming 4K UHD 144Hz, Nano IPS, G-Sync Compatible, HDR 600, thời gian phản hồi 1ms, 27 inch.",
+    "price": 18990000,
+    "originalPrice": 21990000,
+    "category": "Monitor",
+    "brand": "LG",
+    "stock": 12,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/5697/235981/lg-ultragear-27gn950-b-1-600x600.jpg",
+        "public_id": "lg_27gn950"
+      }
+    ],
+    "specifications": {
+      "Size": "27 inch",
+      "Resolution": "3840 x 2160 (4K UHD)",
+      "Refresh Rate": "144Hz",
+      "Response Time": "1ms GtG",
+      "Panel": "Nano IPS",
+      "HDR": "DisplayHDR 600"
+    },
+    "features": ["4K 144Hz", "Nano IPS", "HDR 600", "G-Sync", "1ms"],
+    "isFeatured": false
+  },
+  {
+    "name": "Dell Alienware AW3423DWF 34\" OLED",
+    "description": "Màn hình gaming OLED cong 34 inch 165Hz, QD-OLED, độ phủ màu 99.3% DCI-P3, HDR True Black 400, thời gian phản hồi 0.1ms.",
+    "price": 24990000,
+    "category": "Monitor",
+    "brand": "Dell",
+    "stock": 8,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/alienware_aw3423dwf_1_c84f6deeb0e7454ba62c0f4a0e24c8e6_grande.png",
+        "public_id": "alienware_aw3423dwf"
+      }
+    ],
+    "specifications": {
+      "Size": "34 inch Curved",
+      "Resolution": "3440 x 1440 (UWQHD)",
+      "Refresh Rate": "165Hz",
+      "Response Time": "0.1ms",
+      "Panel": "QD-OLED",
+      "HDR": "True Black 400"
+    },
+    "features": ["QD-OLED", "165Hz", "0.1ms", "HDR 400", "21:9 Ultrawide"],
+    "isFeatured": false
+  },
+  {
+    "name": "MSI MAG274QRF-QD E2 27\" 180Hz",
+    "description": "Màn hình gaming 27 inch 2K 180Hz, Quantum Dot, Rapid IPS, 1ms, 95% DCI-P3, tích hợp KVM switch.",
+    "price": 7990000,
+    "category": "Monitor",
+    "brand": "MSI",
+    "stock": 15,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-man-hinh-msi-mag-274qrf-qd-e2-1_0c38c84a1c354a90b0fb4b96fb36eed7_grande.jpg",
+        "public_id": "msi_mag274qrf"
+      }
+    ],
+    "specifications": {
+      "Size": "27 inch",
+      "Resolution": "2560 x 1440 (QHD)",
+      "Refresh Rate": "180Hz",
+      "Response Time": "1ms",
+      "Panel": "Rapid IPS Quantum Dot",
+      "Color": "95% DCI-P3"
+    },
+    "features": ["2K 180Hz", "Quantum Dot", "KVM Switch", "USB-C", "Rapid IPS"],
+    "isFeatured": false
+  },
+  {
+    "name": "ASUS TUF Gaming VG27AQL1A 27\"",
+    "description": "Màn hình gaming giá tốt 27 inch 2K 170Hz, IPS, G-Sync Compatible, HDR10, ELMB Sync, DisplayHDR 400.",
+    "price": 6490000,
+    "originalPrice": 7490000,
+    "category": "Monitor",
+    "brand": "ASUS",
+    "stock": 20,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-man-hinh-asus-tuf-gaming-vg27aql1a-1_9be8b0fc5a4e46608d4e3cda3f0f0fa2_grande.jpg",
+        "public_id": "asus_vg27aql1a"
+      }
+    ],
+    "specifications": {
+      "Size": "27 inch",
+      "Resolution": "2560 x 1440 (QHD)",
+      "Refresh Rate": "170Hz",
+      "Response Time": "1ms MPRT",
+      "Panel": "IPS",
+      "HDR": "DisplayHDR 400"
+    },
+    "features": ["2K 170Hz", "G-Sync", "ELMB Sync", "HDR 400", "Giá tốt"],
+    "isFeatured": false
+  },
+  {
+    "name": "HP Omen 16 i7-13700HX RTX 4070",
+    "description": "Laptop gaming mạnh mẽ với Intel Core i7-13700HX, RTX 4070 8GB, màn hình 16 inch 2.5K 240Hz, RAM 16GB DDR5.",
+    "price": 38990000,
+    "category": "Laptop",
+    "brand": "HP",
+    "stock": 10,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-laptop-hp-omen-16-xf0070ax-8c5j8pa-1_856f7b83c51947d793c2285c0e0f58ca_grande.png",
+        "public_id": "hp_omen_16"
+      }
+    ],
+    "specifications": {
+      "CPU": "Intel Core i7-13700HX",
+      "RAM": "16GB DDR5",
+      "Storage": "512GB SSD",
+      "Display": "16\" 2.5K 240Hz",
+      "Graphics": "RTX 4070 8GB",
+      "Battery": "83Wh"
+    },
+    "features": ["RTX 4070", "240Hz", "RGB Keyboard", "Thunderbolt 4", "Omen Tempest"],
+    "isFeatured": false
+  },
+  {
+    "name": "Lenovo Legion 5 Pro Ryzen 7 RTX 4060",
+    "description": "Laptop gaming tầm trung hiệu năng cao, AMD Ryzen 7 7745HX, RTX 4060, màn hình 16 inch 2.5K 165Hz.",
+    "price": 32990000,
+    "originalPrice": 35990000,
+    "category": "Laptop",
+    "brand": "Lenovo",
+    "stock": 14,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-laptop-lenovo-legion-5-pro-16irx8-82wk00lvvn-1_29e8c0ad1c7b4ae18f79a4e1f485095e_grande.png",
+        "public_id": "legion_5_pro"
+      }
+    ],
+    "specifications": {
+      "CPU": "AMD Ryzen 7 7745HX",
+      "RAM": "16GB DDR5",
+      "Storage": "512GB SSD",
+      "Display": "16\" 2.5K 165Hz",
+      "Graphics": "RTX 4060 8GB",
+      "Battery": "80Wh"
+    },
+    "features": ["Ryzen 7", "RTX 4060", "2.5K 165Hz", "TrueStrike Keyboard", "Nahimic Audio"],
+    "isFeatured": false
+  },
+  {
+    "name": "Acer Nitro 5 i5-12500H RTX 3050",
+    "description": "Laptop gaming giá rẻ cho sinh viên, Intel Core i5-12500H, RTX 3050 4GB, màn hình 15.6 inch FHD 144Hz.",
+    "price": 19990000,
+    "category": "Laptop",
+    "brand": "Acer",
+    "stock": 25,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-laptop-acer-nitro-5-an515-58-52sp-1_6e95da69a2104ffd9c9e9e8f0f3e15c1_grande.png",
+        "public_id": "acer_nitro_5"
+      }
+    ],
+    "specifications": {
+      "CPU": "Intel Core i5-12500H",
+      "RAM": "8GB DDR4",
+      "Storage": "512GB SSD",
+      "Display": "15.6\" FHD 144Hz",
+      "Graphics": "RTX 3050 4GB",
+      "Battery": "57Wh"
+    },
+    "features": ["Giá rẻ", "RTX 3050", "144Hz", "NitroSense", "Tản nhiệt tốt"],
+    "isFeatured": false
+  },
+  {
+    "name": "ThinkPad X1 Carbon Gen 11",
+    "description": "Laptop business cao cấp siêu mỏng nhẹ, Intel Core i7-1365U, màn hình 14 inch 2.8K OLED, pin 57Wh, carbon fiber.",
+    "price": 42990000,
+    "category": "Laptop",
+    "brand": "Lenovo",
+    "stock": 8,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-laptop-lenovo-thinkpad-x1-carbon-gen-11-21hm00fdvn-1_77f6c4b1e21f4e25b7b079e2de8f3fde_grande.png",
+        "public_id": "thinkpad_x1_carbon"
+      }
+    ],
+    "specifications": {
+      "CPU": "Intel Core i7-1365U",
+      "RAM": "16GB LPDDR5",
+      "Storage": "512GB SSD",
+      "Display": "14\" 2.8K OLED",
+      "Graphics": "Intel Iris Xe",
+      "Battery": "57Wh"
+    },
+    "features": ["Siêu nhẹ 1.12kg", "OLED 2.8K", "ThinkShield", "MIL-STD", "TrackPoint"],
+    "isFeatured": false
+  },
+  {
+    "name": "Microsoft Surface Laptop 5 i7",
+    "description": "Laptop cao cấp từ Microsoft, Intel Core i7-1255U, màn hình PixelSense 13.5 inch cảm ứng, thiết kế sang trọng.",
+    "price": 35990000,
+    "category": "Laptop",
+    "brand": "Microsoft",
+    "stock": 10,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/44/305234/microsoft-surface-laptop-5-i7-1tb-thumb-600x600.jpg",
+        "public_id": "surface_laptop_5"
+      }
+    ],
+    "specifications": {
+      "CPU": "Intel Core i7-1255U",
+      "RAM": "16GB LPDDR5x",
+      "Storage": "512GB SSD",
+      "Display": "13.5\" PixelSense Touch",
+      "Graphics": "Intel Iris Xe",
+      "Battery": "Up to 18 hours"
+    },
+    "features": ["PixelSense Touch", "Alcantara", "Dolby Atmos", "Windows 11", "Pin 18h"],
+    "isFeatured": false
+  },
+  {
+    "name": "OPPO Find N3",
+    "description": "Smartphone gập cao cấp với màn hình AMOLED 7.82 inch, camera Hasselblad, Snapdragon 8 Gen 2, gập không nếp gấp.",
+    "price": 41990000,
+    "category": "Phone",
+    "brand": "OPPO",
+    "stock": 12,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/42/317530/oppo-find-n3-den-thumb-600x600.jpg",
+        "public_id": "oppo_find_n3"
+      }
+    ],
+    "specifications": {
+      "Chip": "Snapdragon 8 Gen 2",
+      "RAM": "16GB",
+      "Storage": "512GB",
+      "Display": "7.82\" AMOLED (mở) + 6.31\" (gập)",
+      "Camera": "50MP Hasselblad Triple",
+      "Battery": "4805 mAh"
+    },
+    "features": ["Màn hình gập", "Hasselblad", "Không nếp gấp", "Sạc 67W", "IPX4"],
+    "isFeatured": false
+  },
+  {
+    "name": "Google Pixel 8 Pro 12GB/256GB",
+    "description": "Smartphone flagship từ Google với chip Tensor G3, camera AI tốt nhất, màn hình OLED 6.7 inch 120Hz, Android thuần.",
+    "price": 24990000,
+    "originalPrice": 27990000,
+    "category": "Phone",
+    "brand": "Google",
+    "stock": 15,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/42/309833/google-pixel-8-pro-xanh-thumb-600x600.jpg",
+        "public_id": "pixel_8_pro"
+      }
+    ],
+    "specifications": {
+      "Chip": "Google Tensor G3",
+      "RAM": "12GB",
+      "Storage": "256GB",
+      "Display": "6.7\" OLED 120Hz",
+      "Camera": "50MP + 48MP + 48MP",
+      "Battery": "5050 mAh"
+    },
+    "features": ["Tensor G3", "AI Photography", "7 năm update", "Magic Eraser", "Android 14"],
+    "isFeatured": false
+  },
+  {
+    "name": "OnePlus 12 16GB/512GB",
+    "description": "Flagship killer với Snapdragon 8 Gen 3, camera Hasselblad, màn hình AMOLED 2K 120Hz, sạc siêu nhanh 100W.",
+    "price": 21990000,
+    "category": "Phone",
+    "brand": "OnePlus",
+    "stock": 20,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/42/321216/oneplus-12-xanh-thumb-600x600.jpg",
+        "public_id": "oneplus_12"
+      }
+    ],
+    "specifications": {
+      "Chip": "Snapdragon 8 Gen 3",
+      "RAM": "16GB",
+      "Storage": "512GB",
+      "Display": "6.82\" AMOLED 2K 120Hz",
+      "Camera": "50MP Hasselblad Triple",
+      "Battery": "5400 mAh"
+    },
+    "features": ["Snapdragon 8 Gen 3", "Sạc 100W", "Hasselblad", "2K Display", "Alert Slider"],
+    "isFeatured": false
+  },
+  {
+    "name": "Nothing Phone (2a) 12GB/256GB",
+    "description": "Smartphone thiết kế độc đáo với Glyph Interface, Dimensity 7200 Pro, màn hình AMOLED 6.7 inch 120Hz, giá tốt.",
+    "price": 8990000,
+    "category": "Phone",
+    "brand": "Nothing",
+    "stock": 30,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/42/322096/nothing-phone-2a-den-thumb-600x600.jpg",
+        "public_id": "nothing_phone_2a"
+      }
+    ],
+    "specifications": {
+      "Chip": "Dimensity 7200 Pro",
+      "RAM": "12GB",
+      "Storage": "256GB",
+      "Display": "6.7\" AMOLED 120Hz",
+      "Camera": "50MP Dual",
+      "Battery": "5000 mAh + 45W"
+    },
+    "features": ["Glyph Interface", "Nothing OS", "Thiết kế độc đáo", "Sạc 45W", "Giá tốt"],
+    "isFeatured": false
+  },
+  {
+    "name": "Razer DeathAdder V3 Pro",
+    "description": "Chuột gaming không dây cao cấp, cảm biến Focus Pro 30K, trọng lượng 63g, pin 90 giờ, switch quang học Gen-3.",
+    "price": 3490000,
+    "category": "Accessory",
+    "brand": "Razer",
+    "stock": 25,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-chuot-razer-deathadder-v3-pro-1_9f96a70e61014efdb0a4a96c52da4089_grande.jpg",
+        "public_id": "deathadder_v3_pro"
+      }
+    ],
+    "specifications": {
+      "Sensor": "Focus Pro 30K DPI",
+      "Weight": "63g",
+      "Battery": "90 hours",
+      "Switch": "Optical Gen-3",
+      "Connection": "Razer HyperSpeed Wireless"
+    },
+    "features": ["30K DPI", "63g siêu nhẹ", "Pin 90h", "Optical Switch", "Ergonomic"],
+    "isFeatured": false
+  },
+  {
+    "name": "SteelSeries Apex Pro TKL Gen 3",
+    "description": "Bàn phím cơ gaming tenkeyless với OmniPoint 2.0 adjustable switches, OLED display, RGB per-key.",
+    "price": 4990000,
+    "category": "Accessory",
+    "brand": "SteelSeries",
+    "stock": 18,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-ban-phim-co-steelseries-apex-pro-tkl-gen-3-1_cd51e97b35084095a6f14f70e6365293_grande.jpg",
+        "public_id": "apex_pro_tkl"
+      }
+    ],
+    "specifications": {
+      "Layout": "TKL (87 keys)",
+      "Switch": "OmniPoint 2.0 Adjustable",
+      "Connection": "USB-C Wired",
+      "Features": "OLED Display",
+      "Keycaps": "PBT"
+    },
+    "features": ["Adjustable Actuation", "OLED Screen", "Per-key RGB", "Rapid Trigger", "TKL"],
+    "isFeatured": false
+  },
+  {
+    "name": "HyperX Cloud III Wireless",
+    "description": "Tai nghe gaming không dây với DTS Headphone:X Spatial Audio, pin 120 giờ, micro noise-cancelling, 2.4GHz.",
+    "price": 3290000,
+    "category": "Accessory",
+    "brand": "HyperX",
+    "stock": 22,
+    "images": [
+      {
+        "url": "https://product.hstatic.net/200000722513/product/gearvn-tai-nghe-hyperx-cloud-iii-wireless-1_03e66f1a81a74ebcb14df2fb95d4ac5f_grande.jpg",
+        "public_id": "hyperx_cloud_iii"
+      }
+    ],
+    "specifications": {
+      "Driver": "53mm",
+      "Battery": "120 hours",
+      "Connection": "2.4GHz Wireless",
+      "Microphone": "Detachable noise-cancelling",
+      "Audio": "DTS Headphone:X"
+    },
+    "features": ["Pin 120h", "DTS:X", "Thoải mái", "Micro rời", "2.4GHz"],
+    "isFeatured": false
+  },
+  {
+    "name": "Elgato Stream Deck MK.2",
+    "description": "Bàn điều khiển streaming chuyên nghiệp với 15 phím LCD, tích hợp icons, macros, plugins cho OBS, Twitch.",
+    "price": 3990000,
+    "category": "Accessory",
+    "brand": "Elgato",
+    "stock": 12,
+    "images": [
+      {
+        "url": "https://bizweb.dktcdn.net/thumb/grande/100/329/122/products/elgato-stream-deck-mk-2-black-gallery-01-2000x2000-1.jpg",
+        "public_id": "stream_deck_mk2"
+      }
+    ],
+    "specifications": {
+      "Keys": "15 LCD keys",
+      "Connection": "USB-C",
+      "Compatibility": "Windows, Mac",
+      "Software": "Stream Deck Software",
+      "Dimensions": "118 x 84 x 25mm"
+    },
+    "features": ["15 LCD keys", "Plugins", "Macros", "Icons Store", "USB-C"],
+    "isFeatured": false
+  },
+  {
+    "name": "Samsung T7 Shield 2TB Portable SSD",
+    "description": "Ổ cứng SSD di động chống sốc IP65, tốc độ đọc/ghi 1050MB/s, USB 3.2 Gen 2, bảo mật AES 256-bit.",
+    "price": 5490000,
+    "category": "Accessory",
+    "brand": "Samsung",
+    "stock": 20,
+    "images": [
+      {
+        "url": "https://cdn.tgdd.vn/Products/Images/7571/302297/samsung-t7-shield-2tb-xanh-thumb-600x600.jpg",
+        "public_id": "samsung_t7_shield"
+      }
+    ],
+    "specifications": {
+      "Capacity": "2TB",
+      "Speed": "Read 1050MB/s, Write 1000MB/s",
+      "Interface": "USB 3.2 Gen 2",
+      "Protection": "IP65 Dust/Water resistant",
+      "Security": "AES 256-bit encryption"
+    },
+    "features": ["IP65", "1050MB/s", "Chống sốc", "Mã hóa AES", "USB-C"],
+    "isFeatured": false
+  }
+]
