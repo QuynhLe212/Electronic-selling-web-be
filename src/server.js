@@ -1,9 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const connectDB = require("./config/database");
 const { errorHandler } = require("./middleware/errorHandler");
-const cloudinary = require("./config/cloudinary");
 // ❌ Bỏ import testGeminiConnection
 // const { testGeminiConnection } = require("./config/gemini");
 
@@ -22,6 +22,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Routes
 app.use("/api/auth", require("./routes/authRoutes"));
@@ -92,10 +93,6 @@ const startServer = async () => {
   try {
     // Connect to Database
     await connectDB();
-
-    // Test Cloudinary connection
-    await cloudinary.api.ping();
-    console.log("✅ Cloudinary connected successfully");
 
     // ❌ Bỏ test Gemini connection
     // await testGeminiConnection();

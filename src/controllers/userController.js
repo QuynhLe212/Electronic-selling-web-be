@@ -1,7 +1,32 @@
 const User = require("../models/User");
 const Order = require("../models/Order");
-const cloudinary = require("../config/cloudinary");
+const fs = require("fs");
+const path = require("path");
 const { asyncHandler } = require("../middleware/errorHandler");
+
+const DEFAULT_AVATAR_URL =
+  "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff";
+
+const resolveLocalPathFromUrl = (urlPath) => {
+  if (!urlPath || typeof urlPath !== "string") return null;
+  if (!urlPath.startsWith("/uploads/")) return null;
+
+  const relativeUploadPath = urlPath.replace(/^\/+/, "");
+  return path.join(__dirname, "../../", relativeUploadPath);
+};
+
+const deleteLocalFileByUrl = (urlPath) => {
+  const filePath = resolveLocalPathFromUrl(urlPath);
+  if (!filePath) return;
+
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  } catch (error) {
+    console.error("Error deleting local file:", error.message);
+  }
+};
 
 // @desc    Get all users (Admin)
 // @route   GET /api/users
@@ -276,18 +301,13 @@ exports.deleteUser = asyncHandler(async (req, res) => {
     });
   }
 
-  // Delete user's avatar from Cloudinary if exists
+  // Delete user's avatar from local storage if exists
   if (
     user.avatar &&
     user.avatar.public_id &&
     user.avatar.public_id !== "avatar_default"
   ) {
-    try {
-      await cloudinary.uploader.destroy(user.avatar.public_id);
-      console.log("Avatar deleted from Cloudinary");
-    } catch (error) {
-      console.error("Error deleting avatar from Cloudinary:", error);
-    }
+    deleteLocalFileByUrl(user.avatar.url);
   }
 
   await user.deleteOne();
@@ -318,23 +338,18 @@ exports.uploadAvatar = asyncHandler(async (req, res) => {
     });
   }
 
-  // Delete old avatar from Cloudinary if exists and not default
+  // Delete old avatar from local storage if exists and not default
   if (
     user.avatar &&
     user.avatar.public_id &&
     user.avatar.public_id !== "avatar_default"
   ) {
-    try {
-      await cloudinary.uploader.destroy(user.avatar.public_id);
-      console.log("Old avatar deleted from Cloudinary");
-    } catch (error) {
-      console.error("Error deleting old avatar:", error);
-    }
+    deleteLocalFileByUrl(user.avatar.url);
   }
 
   // Update avatar with new image
   user.avatar = {
-    url: req.file.path,
+    url: `/uploads/avatars/${req.file.filename}`,
     public_id: req.file.filename,
   };
 
@@ -360,23 +375,18 @@ exports.deleteAvatar = asyncHandler(async (req, res) => {
     });
   }
 
-  // Delete avatar from Cloudinary if exists
+  // Delete avatar from local storage if exists
   if (
     user.avatar &&
     user.avatar.public_id &&
     user.avatar.public_id !== "avatar_default"
   ) {
-    try {
-      await cloudinary.uploader.destroy(user.avatar.public_id);
-      console.log("Avatar deleted from Cloudinary");
-    } catch (error) {
-      console.error("Error deleting avatar:", error);
-    }
+    deleteLocalFileByUrl(user.avatar.url);
   }
 
   // Reset to default avatar
   user.avatar = {
-    url: "https://res.cloudinary.com/demo/image/upload/avatar_default.png",
+    url: DEFAULT_AVATAR_URL,
     public_id: "avatar_default",
   };
 

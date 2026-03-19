@@ -1,6 +1,29 @@
 const Product = require("../models/Product");
-const cloudinary = require("../config/cloudinary");
+const fs = require("fs");
+const path = require("path");
 const { asyncHandler } = require("../middleware/errorHandler");
+
+const toProductImageUrl = (fileName) => `/uploads/products/${fileName}`;
+
+const resolveLocalPathFromUrl = (urlPath) => {
+  if (!urlPath || typeof urlPath !== "string") return null;
+  if (!urlPath.startsWith("/uploads/")) return null;
+  const relativeUploadPath = urlPath.replace(/^\/+/, "");
+  return path.join(__dirname, "../../", relativeUploadPath);
+};
+
+const deleteLocalImageByUrl = (urlPath) => {
+  const filePath = resolveLocalPathFromUrl(urlPath);
+  if (!filePath) return;
+
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  } catch (error) {
+    console.error("Error deleting local image:", error.message);
+  }
+};
 
 // @desc    Get all products with filters, sorting, pagination
 // @route   GET /api/products
@@ -110,7 +133,7 @@ exports.createProduct = asyncHandler(async (req, res) => {
   // If files are uploaded (multipart/form-data)
   if (req.files && req.files.length > 0) {
     images = req.files.map((file) => ({
-      url: file.path,
+      url: toProductImageUrl(file.filename),
       public_id: file.filename,
     }));
   }
@@ -191,16 +214,17 @@ exports.updateProduct = asyncHandler(async (req, res) => {
 
   // Handle image updates
   if (req.files && req.files.length > 0) {
-    // Delete old images from Cloudinary
+    // Delete old local images
     for (const image of product.images) {
-      await cloudinary.uploader.destroy(image.public_id);
+      deleteLocalImageByUrl(image?.url);
     }
 
     // Add new images
     product.images = req.files.map((file) => ({
-      url: file.path,
+      url: toProductImageUrl(file.filename),
       public_id: file.filename,
     }));
+    req.body.images = product.images;
   }
 
   // Parse specifications if provided
@@ -259,13 +283,9 @@ exports.deleteProduct = asyncHandler(async (req, res) => {
     });
   }
 
-  // Delete images from Cloudinary
+  // Delete images from local storage
   for (const image of product.images) {
-    try {
-      await cloudinary.uploader.destroy(image.public_id);
-    } catch (error) {
-      console.error("Error deleting image from Cloudinary:", error);
-    }
+    deleteLocalImageByUrl(image?.url);
   }
 
   await product.deleteOne();

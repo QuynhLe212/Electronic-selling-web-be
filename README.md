@@ -35,7 +35,7 @@ Electronic Selling Platform là hệ thống backend RESTful API đầy đủ ch
 - CRUD sản phẩm (Admin)
 - Tìm kiếm và lọc sản phẩm
 - Phân loại theo danh mục: Laptop, Phone, Tablet, Accessory, Monitor, PC, Gaming
-- Upload nhiều ảnh sản phẩm (Cloudinary)
+- Upload nhiều ảnh sản phẩm (lưu local với Multer)
 - Đánh giá và nhận xét sản phẩm
 - Sản phẩm nổi bật và top rated
 - Pagination và sorting
@@ -52,7 +52,7 @@ Electronic Selling Platform là hệ thống backend RESTful API đầy đủ ch
 - Lưu lịch sử hội thoại
 
 ### 🖼️ Upload & Media
-- Cloudinary integration
+- Local file storage (Multer + thư mục /uploads)
 - Upload và quản lý ảnh sản phẩm
 - Tự động xóa ảnh cũ khi cập nhật
 
@@ -70,7 +70,6 @@ Electronic Selling Platform là hệ thống backend RESTful API đầy đủ ch
 - **express-validator** - Input validation
 
 ### Cloud Services
-- **Cloudinary** - Image storage & CDN
 - **Google Gemini AI** - AI chatbot
 
 ### Development Tools
@@ -134,11 +133,6 @@ MONGODB_URI=mongodb://localhost:27017/electronic-selling
 JWT_SECRET=your_super_secret_jwt_key_here
 JWT_EXPIRE=7d
 
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
 # Google Gemini AI
 GEMINI_API_KEY=your_gemini_api_key
 
@@ -152,10 +146,6 @@ EMAIL_PASSWORD=your_app_password
 ```
 
 ### Cách lấy API Keys
-
-**Cloudinary:**
-1. Đăng ký tại [cloudinary.com](https://cloudinary.com/)
-2. Vào Dashboard để lấy Cloud Name, API Key, API Secret
 
 **Google Gemini AI:**
 1. Truy cập [Google AI Studio](https://makersuite.google.com/app/apikey)
@@ -338,7 +328,6 @@ server/
 ├── src/
 │   ├── config/              # Cấu hình
 │   │   ├── ai.js           # Google Gemini AI config
-│   │   ├── cloudinary.js   # Cloudinary config
 │   │   └── database.js     # MongoDB connection
 │   ├── controllers/         # Business logic
 │   │   ├── authController.js
@@ -401,9 +390,9 @@ mongod --version
 npm run check-db
 ```
 
-### Cloudinary upload lỗi
-- Kiểm tra API credentials trong `.env`
-- Đảm bảo đã enable unsigned uploads (nếu cần)
+### Upload ảnh lỗi
+- Kiểm tra thư mục `uploads/` có quyền ghi
+- Kiểm tra giới hạn kích thước file trong middleware upload
 
 ### JWT invalid token
 - Kiểm tra `JWT_SECRET` trong `.env`

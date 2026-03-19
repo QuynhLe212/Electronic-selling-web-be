@@ -18,6 +18,7 @@ exports.register = asyncHandler(async (req, res) => {
     });
   }
 
+
   // Create user
   const user = await User.create({
     name,
@@ -92,9 +93,7 @@ exports.getMe = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Update user profile
-// @route   PUT /api/auth/profile
-// @access  Private
+
 exports.updateProfile = asyncHandler(async (req, res) => {
   const fieldsToUpdate = {
     name: req.body.name,
