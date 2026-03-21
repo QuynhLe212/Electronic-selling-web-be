@@ -37,3 +37,6 @@ coverage/
 # Misc
 *.tmp
 *.temp
+
+# Uploads
+uploads/
