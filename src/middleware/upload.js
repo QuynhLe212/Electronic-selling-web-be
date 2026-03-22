@@ -2,10 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 
-const productsUploadDir = path.join(__dirname, "../../uploads/products");
 const avatarsUploadDir = path.join(__dirname, "../../uploads/avatars");
 
-fs.mkdirSync(productsUploadDir, { recursive: true });
 fs.mkdirSync(avatarsUploadDir, { recursive: true });
 
 const buildFileName = (prefix, originalName) => {
@@ -13,10 +11,7 @@ const buildFileName = (prefix, originalName) => {
   return `${prefix}-${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`;
 };
 
-const productStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, productsUploadDir),
-  filename: (req, file, cb) => cb(null, buildFileName("product", file.originalname)),
-});
+const productStorage = multer.memoryStorage();
 
 const avatarStorage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, avatarsUploadDir),

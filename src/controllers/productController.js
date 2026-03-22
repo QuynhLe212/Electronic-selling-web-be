@@ -1,9 +1,9 @@
 const Product = require("../models/Product");
 const fs = require("fs");
 const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+const cloudinary = require("../config/cloudinary");
 const { asyncHandler } = require("../middleware/errorHandler");
-
-const toProductImageUrl = (fileName) => `/uploads/products/${fileName}`;
 
 const resolveLocalPathFromUrl = (urlPath) => {
   if (!urlPath || typeof urlPath !== "string") return null;
@@ -23,6 +23,64 @@ const deleteLocalImageByUrl = (urlPath) => {
   } catch (error) {
     console.error("Error deleting local image:", error.message);
   }
+};
+
+const uploadProductImageToCloudinary = (file) =>
+  new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: "electronic-selling/products",
+        public_id: `product-${Date.now()}-${uuidv4()}`,
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        return resolve(result);
+      },
+    );
+
+    uploadStream.end(file.buffer);
+  });
+
+const deleteProductImage = async (image) => {
+  if (!image) return;
+
+  // Legacy local images from previous upload flow
+  if (image.url && image.url.startsWith("/uploads/")) {
+    deleteLocalImageByUrl(image.url);
+    return;
+  }
+
+  // Cloudinary images
+  if (
+    image.public_id &&
+    typeof image.url === "string" &&
+    image.url.includes("res.cloudinary.com")
+  ) {
+    try {
+      await cloudinary.uploader.destroy(image.public_id, {
+        resource_type: "image",
+      });
+    } catch (error) {
+      console.error("Error deleting Cloudinary image:", error.message);
+    }
+  }
+};
+
+const normalizeBodyImages = (images) => {
+  if (!Array.isArray(images)) return [];
+
+  return images
+    .map((image) => {
+      if (typeof image === "string") {
+        return { url: image, public_id: uuidv4() };
+      }
+      return image;
+    })
+    .filter((image) => {
+      const url = image?.url;
+      return typeof url === "string" && /^https?:\/\//i.test(url);
+    });
 };
 
 // @desc    Get all products with filters, sorting, pagination
@@ -132,20 +190,24 @@ exports.createProduct = asyncHandler(async (req, res) => {
 
   // If files are uploaded (multipart/form-data)
   if (req.files && req.files.length > 0) {
-    images = req.files.map((file) => ({
-      url: toProductImageUrl(file.filename),
-      public_id: file.filename,
+    const uploadedImages = await Promise.all(
+      req.files.map((file) => uploadProductImageToCloudinary(file)),
+    );
+
+    images = uploadedImages.map((uploaded) => ({
+      url: uploaded.secure_url,
+      public_id: uploaded.public_id,
     }));
   }
   // If images are provided in JSON body
   else if (req.body.images && Array.isArray(req.body.images)) {
-    images = req.body.images;
+    images = normalizeBodyImages(req.body.images);
   }
 
   if (images.length === 0) {
     return res.status(400).json({
       success: false,
-      message: "Please upload at least one product image",
+      message: "Please upload at least one product image or provide valid image URLs",
     });
   }
 
@@ -214,16 +276,17 @@ exports.updateProduct = asyncHandler(async (req, res) => {
 
   // Handle image updates
   if (req.files && req.files.length > 0) {
-    // Delete old local images
-    for (const image of product.images) {
-      deleteLocalImageByUrl(image?.url);
-    }
+    await Promise.all(product.images.map((image) => deleteProductImage(image)));
 
-    // Add new images
-    product.images = req.files.map((file) => ({
-      url: toProductImageUrl(file.filename),
-      public_id: file.filename,
+    const uploadedImages = await Promise.all(
+      req.files.map((file) => uploadProductImageToCloudinary(file)),
+    );
+
+    product.images = uploadedImages.map((uploaded) => ({
+      url: uploaded.secure_url,
+      public_id: uploaded.public_id,
     }));
+
     req.body.images = product.images;
   }
 
@@ -283,10 +346,7 @@ exports.deleteProduct = asyncHandler(async (req, res) => {
     });
   }
 
-  // Delete images from local storage
-  for (const image of product.images) {
-    deleteLocalImageByUrl(image?.url);
-  }
+  await Promise.all(product.images.map((image) => deleteProductImage(image)));
 
   await product.deleteOne();
 
