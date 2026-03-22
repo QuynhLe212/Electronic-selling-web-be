@@ -1,9 +1,13 @@
-﻿const STOP_WORDS = new Set([
+const STOP_WORDS = new Set([
+    "loai",
+    "cai",
+    "chiec",
+    "san",
+    "pham",
     "va",
     "voi",
     "cho",
     "cua",
-    "tai",
     "la",
     "the",
     "he",
@@ -13,22 +17,40 @@
     "co",
     "day",
     "wireless",
-    "new",
-    "pro",
-    "max",
-    "plus",
 ]);
 
-const SYNONYM_GROUPS = [
-    ["tai nghe", "headphone", "headphones", "earphone", "earphones", "airpods"],
-    ["dien thoai", "phone", "smartphone", "mobile", "iphone"],
-    ["chuot", "mouse"],
-    ["ban phim", "keyboard"],
-    ["sac", "charger", "adapter"],
-    ["pin du phong", "power bank", "powerbank"],
-    ["laptop", "notebook", "may tinh xach tay"],
-    ["tablet", "may tinh bang", "ipad"],
-];
+const TOKEN_SYNONYMS = {
+    dt: ["dien", "thoai", "phone"],
+    dthoai: ["dien", "thoai", "phone"],
+    cellphone: ["dien", "thoai", "phone"],
+    smartphone: ["dien", "thoai", "phone"],
+    mobile: ["dien", "thoai", "phone"],
+    phone: ["dien", "thoai"],
+    headphone: ["tai", "nghe", "airpods"],
+    headphones: ["tai", "nghe", "airpods"],
+    earphone: ["tai", "nghe", "airpods"],
+    earphones: ["tai", "nghe", "airpods"],
+    airpods: ["tai", "nghe", "headphone"],
+    notebook: ["laptop"],
+    ultrabook: ["laptop"],
+    tab: ["tablet"],
+    ipad: ["tablet"],
+};
+
+const PHRASE_SYNONYMS = {
+    "dien thoai": ["phone", "smartphone", "iphone"],
+    "tai nghe": ["headphone", "earphone", "airpods"],
+    "may tinh bang": ["tablet", "ipad"],
+    "may tinh xach tay": ["laptop", "notebook"],
+};
+
+const CATEGORY_ALIASES = {
+    Phone: ["dien thoai", "phone", "smartphone", "mobile", "di dong", "iphone"],
+    Laptop: ["laptop", "notebook", "ultrabook", "macbook", "surface", "may tinh xach tay"],
+    Tablet: ["tablet", "ipad", "may tinh bang", "galaxy tab", "tab"],
+    Accessory: ["phu kien", "accessory", "tai nghe", "headphone", "earphone", "airpods", "charger", "sac", "adapter", "tay cam", "gamepad"],
+    Monitor: ["man hinh", "monitor", "screen", "display"],
+};
 
 const toNumber = (value, fallback = 0) => {
     const parsed = Number(value);
@@ -40,23 +62,18 @@ const normalizeText = (value) =>
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
+    // Support both proper Vietnamese 'đ' and potential mojibake forms.
+    .replace(/đ/g, "d")
     .replace(/Ä‘/g, "d")
     .replace(/\s+/g, " ")
     .trim();
 
 const tokenize = (value) => {
     const normalized = normalizeText(value);
-    const tokens = normalized.match(/[a-z0-9]+/g);
-    return tokens || [];
+    return normalized.match(/[a-z0-9]+/g) || [];
 };
 
-const termFrequencyMap = (tokens) => {
-    const map = new Map();
-    tokens.forEach((token) => {
-        map.set(token, (map.get(token) || 0) + 1);
-    });
-    return map;
-};
+const uniqueTokens = (tokens) => Array.from(new Set(tokens.filter(Boolean)));
 
 const levenshteinDistance = (a, b) => {
     if (a === b) return 0;
@@ -80,226 +97,214 @@ const levenshteinDistance = (a, b) => {
     return dp[a.length][b.length];
 };
 
-const maxTypoDistance = (tokenLength) => {
-    if (tokenLength <= 4) return 2;
-    if (tokenLength <= 8) return 2;
-    return 3;
+const buildVocabulary = (products) => {
+    const vocab = new Set();
+
+    (Array.isArray(products) ? products : []).forEach((product) => {
+        tokenize(product && product.name).forEach((token) => vocab.add(token));
+        tokenize(product && product.brand).forEach((token) => vocab.add(token));
+        tokenize(product && product.category).forEach((token) => vocab.add(token));
+    });
+
+    Object.values(TOKEN_SYNONYMS).forEach((synonyms) => {
+        synonyms.forEach((token) => vocab.add(token));
+    });
+
+    Object.values(CATEGORY_ALIASES).forEach((aliases) => {
+        aliases.forEach((alias) => tokenize(alias).forEach((token) => vocab.add(token)));
+    });
+
+    return Array.from(vocab);
 };
 
-const bestFuzzySimilarity = (queryToken, candidateTokens) => {
-    if (!queryToken || !candidateTokens.length) return 0;
+const correctTokenWithVocabulary = (token, vocabulary) => {
+    if (!token || !Array.isArray(vocabulary) || vocabulary.length === 0) return token;
+    if (vocabulary.includes(token)) return token;
 
-    const maxDistance = maxTypoDistance(queryToken.length);
-    let best = 0;
+    let bestToken = token;
+    let bestDistance = Number.POSITIVE_INFINITY;
 
-    for (let i = 0; i < candidateTokens.length; i += 1) {
-        const candidate = candidateTokens[i];
+    for (let i = 0; i < vocabulary.length; i += 1) {
+        const candidate = vocabulary[i];
         if (!candidate) continue;
+        if (Math.abs(candidate.length - token.length) > 2) continue;
 
-        if (queryToken.length <= 2 && candidate.startsWith(queryToken)) {
-            const prefixSimilarity = queryToken.length === 1 ? 0.92 : 0.86;
-            if (prefixSimilarity > best) best = prefixSimilarity;
-            continue;
+        const distance = levenshteinDistance(token, candidate);
+        if (distance < bestDistance) {
+            bestDistance = distance;
+            bestToken = candidate;
         }
-
-        if (!/\d/.test(queryToken) && candidate[0] !== queryToken[0]) {
-            continue;
-        }
-
-        const dist = levenshteinDistance(queryToken, candidate);
-        if (dist > maxDistance) continue;
-
-        const similarity = 1 - dist / Math.max(queryToken.length, candidate.length, 1);
-        if (similarity > best) best = similarity;
     }
 
-    return best;
+    return bestDistance <= 2 ? bestToken : token;
 };
 
-const bm25 = (tf, docLen, avgDocLen, idf, k1 = 1.5, b = 0.75) => {
-    if (!tf || !idf) return 0;
-    const denominator = tf + k1 * (1 - b + b * (docLen / Math.max(avgDocLen, 1)));
-    if (!denominator) return 0;
-    return idf * ((tf * (k1 + 1)) / denominator);
+const expandSynonyms = (tokens) => {
+    const expanded = [];
+
+    tokens.forEach((token) => {
+        expanded.push(token);
+
+        const mapped = TOKEN_SYNONYMS[token];
+        if (mapped && mapped.length > 0) {
+            mapped.forEach((synonymToken) => expanded.push(synonymToken));
+        }
+    });
+
+    return uniqueTokens(expanded);
 };
 
-const expandWithSynonyms = (normalizedQuery) => {
-    const expanded = new Set(tokenize(normalizedQuery));
+const expandPhraseSynonyms = (normalizedQuery, tokens) => {
+    const expanded = [...tokens];
 
-    SYNONYM_GROUPS.forEach((group) => {
-        const found = group.some((variant) => normalizedQuery.includes(variant));
-        if (!found) return;
+    Object.entries(PHRASE_SYNONYMS).forEach(([phrase, mappedTokens]) => {
+        if (!normalizedQuery.includes(phrase)) return;
 
-        group.forEach((variant) => {
-            tokenize(variant).forEach((token) => expanded.add(token));
-        });
+        mappedTokens.forEach((token) => expanded.push(token));
     });
 
-    return Array.from(expanded).filter((token) => token.length >= 1);
+    return uniqueTokens(expanded);
 };
 
-const buildIndex = (products) => {
-    const docs = (Array.isArray(products) ? products : []).map((product) => {
-        const nameTokens = tokenize(product && product.name);
-        const brandTokens = tokenize(product && product.brand);
-        const descTokens = tokenize(product && product.description);
+const detectQueryCategory = (normalizedQuery, tokens) => {
+    for (const [category, aliases] of Object.entries(CATEGORY_ALIASES)) {
+        for (let i = 0; i < aliases.length; i += 1) {
+            const alias = normalizeText(aliases[i]);
+            const aliasTokens = tokenize(alias);
 
-        return {
-            product,
-            nameTokens,
-            brandTokens,
-            descTokens,
-            allTokens: [...nameTokens, ...brandTokens, ...descTokens],
-            nameTf: termFrequencyMap(nameTokens),
-            brandTf: termFrequencyMap(brandTokens),
-            descTf: termFrequencyMap(descTokens),
-            nameLen: nameTokens.length || 1,
-            brandLen: brandTokens.length || 1,
-            descLen: descTokens.length || 1,
-        };
-    });
+            if (alias.includes(" ") && normalizedQuery.includes(alias)) {
+                return category;
+            }
 
-    const avgNameLen = docs.reduce((sum, doc) => sum + doc.nameLen, 0) / Math.max(docs.length, 1);
-    const avgBrandLen = docs.reduce((sum, doc) => sum + doc.brandLen, 0) / Math.max(docs.length, 1);
-    const avgDescLen = docs.reduce((sum, doc) => sum + doc.descLen, 0) / Math.max(docs.length, 1);
+            if (aliasTokens.length > 0 && aliasTokens.every((token) => tokens.includes(token))) {
+                return category;
+            }
+        }
+    }
 
-    const docFrequency = new Map();
-    docs.forEach((doc) => {
-        const uniq = new Set(doc.allTokens);
-        uniq.forEach((token) => {
-            docFrequency.set(token, (docFrequency.get(token) || 0) + 1);
-        });
-    });
+    return null;
+};
+
+const preprocessQuery = (search, vocabulary) => {
+    const normalizedQuery = normalizeText(search);
+    const rawTokens = tokenize(normalizedQuery);
+    const filteredTokens = rawTokens.filter((token) => !STOP_WORDS.has(token));
+    const synonymExpandedTokens = expandSynonyms(filteredTokens);
+    const phraseExpandedTokens = expandPhraseSynonyms(normalizedQuery, synonymExpandedTokens);
+    const correctedTokens = phraseExpandedTokens.map((token) => correctTokenWithVocabulary(token, vocabulary));
+    const finalTokens = uniqueTokens(correctedTokens.filter((token) => !STOP_WORDS.has(token)));
 
     return {
-        docs,
-        docFrequency,
-        docCount: docs.length,
-        avgNameLen,
-        avgBrandLen,
-        avgDescLen,
+        normalizedQuery,
+        tokens: finalTokens,
     };
 };
 
-const scoreDocument = (doc, index, expandedTokens, coreTokens) => {
+const scoreProduct = (product, tokens) => {
+    const nameTokens = new Set(tokenize(product && product.name));
+    const brandTokens = new Set(tokenize(product && product.brand));
+    const categoryTokens = new Set(tokenize(product && product.category));
+    const descTokens = new Set(tokenize(product && product.description));
+
     let score = 0;
-    let exactMatches = 0;
-    let fuzzyNameBrandMatches = 0;
+    let titleMatches = 0;
+    let attributeMatches = 0;
+    let descriptionMatches = 0;
+    const matchedTokens = new Set();
 
-    expandedTokens.forEach((token) => {
-        const df = index.docFrequency.get(token) || 0;
-        const idf = Math.log(1 + (index.docCount - df + 0.5) / (df + 0.5));
-
-        const nameTf = doc.nameTf.get(token) || 0;
-        const brandTf = doc.brandTf.get(token) || 0;
-        const descTf = doc.descTf.get(token) || 0;
-
-        if (nameTf > 0 || brandTf > 0 || descTf > 0) {
-            exactMatches += 1;
-        }
-
-        score += 3.0 * bm25(nameTf, doc.nameLen, index.avgNameLen, idf);
-        score += 2.2 * bm25(brandTf, doc.brandLen, index.avgBrandLen, idf);
-        score += 1.0 * bm25(descTf, doc.descLen, index.avgDescLen, idf);
-
-        if (nameTf > 0 || brandTf > 0) {
-            fuzzyNameBrandMatches += 1;
+    tokens.forEach((token) => {
+        if (nameTokens.has(token)) {
+            score += 10;
+            titleMatches += 1;
+            matchedTokens.add(token);
             return;
         }
 
-        const fuzzyName = bestFuzzySimilarity(token, doc.nameTokens);
-        const fuzzyBrand = bestFuzzySimilarity(token, doc.brandTokens);
-        const fuzzyDesc = bestFuzzySimilarity(token, doc.descTokens);
-
-        const fuzzySignal = Math.max(fuzzyName * 1.3, fuzzyBrand * 1.1, fuzzyDesc * 0.75);
-        if (fuzzySignal >= 0.6) {
-            score += idf * fuzzySignal;
+        if (brandTokens.has(token) || categoryTokens.has(token)) {
+            score += 5;
+            attributeMatches += 1;
+            matchedTokens.add(token);
+            return;
         }
 
-        if (Math.max(fuzzyName, fuzzyBrand) >= 0.6) {
-            fuzzyNameBrandMatches += 1;
+        if (descTokens.has(token)) {
+            score += 2;
+            descriptionMatches += 1;
+            matchedTokens.add(token);
         }
     });
-
-    const normalizedName = normalizeText(doc.product && doc.product.name);
-    const normalizedBrand = normalizeText(doc.product && doc.product.brand);
-    const normalizedCoreQuery = normalizeText(coreTokens.join(" "));
-
-    const isSingleCharQuery = coreTokens.length === 1 && coreTokens[0].length === 1;
-    if (isSingleCharQuery) {
-        const token = coreTokens[0];
-        const strictPrefixPass =
-            doc.nameTokens.some((candidate) => candidate.startsWith(token)) ||
-            doc.brandTokens.some((candidate) => candidate.startsWith(token));
-        if (!strictPrefixPass) {
-            return {
-                score: 0,
-                isValid: false,
-            };
-        }
-
-        score += 5;
-    }
-
-    if (normalizedCoreQuery && normalizedName === normalizedCoreQuery) {
-        score += 10;
-    } else if (normalizedCoreQuery && normalizedName.startsWith(normalizedCoreQuery)) {
-        score += 6;
-    }
-
-    const modelTokens = coreTokens.filter((token) => /\d/.test(token));
-    const modelConstraintPass = modelTokens.every((token) => {
-        if (doc.nameTf.get(token) || doc.brandTf.get(token) || doc.descTf.get(token)) return true;
-        return Math.max(
-            bestFuzzySimilarity(token, doc.nameTokens),
-            bestFuzzySimilarity(token, doc.brandTokens)
-        ) >= 0.75;
-    });
-
-    const minDirectMatches = coreTokens.length <= 1 ? 1 : Math.min(2, coreTokens.length);
-    const directConstraintPass = fuzzyNameBrandMatches >= minDirectMatches;
-
-    const minCoverage = coreTokens.length <= 2 ?
-        1 :
-        Math.max(2, Math.ceil(coreTokens.length * 0.6));
-
-    const coveragePass = exactMatches >= minCoverage || fuzzyNameBrandMatches >= minCoverage;
 
     return {
         score,
-        isValid: modelConstraintPass && directConstraintPass && coveragePass,
+        titleMatches,
+        attributeMatches,
+        descriptionMatches,
+        coverage: tokens.length > 0 ? matchedTokens.size / tokens.length : 0,
     };
 };
 
 const normalizeSort = (sortBy) => {
     const s = String(sortBy || "relevance").toLowerCase();
-    if (s === "price-low" || s === "price_asc") return "price-asc";
-    if (s === "price-high" || s === "price_desc") return "price-desc";
+    if (s === "price-low" || s === "price_asc" || s === "price") return "price-asc";
+    if (s === "price-high" || s === "price_desc" || s === "-price") return "price-desc";
     if (s === "best-selling" || s === "bestselling" || s === "sold") return "best-selling";
-    if (s === "rating") return "rating";
-    if (s === "newest") return "newest";
+    if (s === "rating" || s === "-rating") return "rating";
+    if (s === "newest" || s === "-createdat") return "newest";
     return "relevance";
+};
+
+const getDiscountPercent = (product) => {
+    const explicitDiscount = toNumber(product && product.discount, NaN);
+    if (Number.isFinite(explicitDiscount) && explicitDiscount > 0) return explicitDiscount;
+
+    const price = toNumber(product && product.price, 0);
+    const originalPrice = toNumber(product && product.originalPrice, 0);
+    if (originalPrice > price && originalPrice > 0) {
+        return Math.round(((originalPrice - price) / originalPrice) * 100);
+    }
+
+    return 0;
 };
 
 const sortScored = (scored, sortBy) => {
     const bySoldDesc = (a, b) => toNumber(b && b.product && b.product.sold, 0) - toNumber(a && a.product && a.product.sold, 0);
+    const byDiscountDesc = (a, b) => getDiscountPercent(b && b.product) - getDiscountPercent(a && a.product);
+    const byRatingDesc = (a, b) => toNumber(b && b.product && b.product.rating, 0) - toNumber(a && a.product && a.product.rating, 0);
     const byPriceAsc = (a, b) => toNumber(a && a.product && a.product.price, 0) - toNumber(b && b.product && b.product.price, 0);
     const byPriceDesc = (a, b) => toNumber(b && b.product && b.product.price, 0) - toNumber(a && a.product && a.product.price, 0);
-    const byRatingDesc = (a, b) => toNumber(b && b.product && b.product.rating, 0) - toNumber(a && a.product && a.product.rating, 0);
 
     if (sortBy === "price-asc") {
-        scored.sort((a, b) => byPriceAsc(a, b));
-    } else if (sortBy === "price-desc") {
-        scored.sort((a, b) => byPriceDesc(a, b));
-    } else if (sortBy === "best-selling") {
-        scored.sort((a, b) => bySoldDesc(a, b) || byRatingDesc(a, b) || (b.score || 0) - (a.score || 0));
-    } else if (sortBy === "rating") {
-        scored.sort((a, b) => byRatingDesc(a, b) || bySoldDesc(a, b) || (b.score || 0) - (a.score || 0));
-    } else if (sortBy === "newest") {
-        scored.sort((a, b) => new Date((b && b.product && b.product.createdAt) || 0) - new Date((a && a.product && a.product.createdAt) || 0));
-    } else {
-        scored.sort((a, b) => (b.score || 0) - (a.score || 0) || bySoldDesc(a, b) || byRatingDesc(a, b));
+        scored.sort((a, b) => byPriceAsc(a, b) || bySoldDesc(a, b) || byDiscountDesc(a, b));
+        return;
     }
+
+    if (sortBy === "price-desc") {
+        scored.sort((a, b) => byPriceDesc(a, b) || bySoldDesc(a, b) || byDiscountDesc(a, b));
+        return;
+    }
+
+    if (sortBy === "best-selling") {
+        scored.sort((a, b) => bySoldDesc(a, b) || byDiscountDesc(a, b) || (b.score || 0) - (a.score || 0));
+        return;
+    }
+
+    if (sortBy === "rating") {
+        scored.sort((a, b) => byRatingDesc(a, b) || bySoldDesc(a, b) || byDiscountDesc(a, b));
+        return;
+    }
+
+    if (sortBy === "newest") {
+        scored.sort((a, b) => {
+            const d = new Date((b && b.product && b.product.createdAt) || 0) - new Date((a && a.product && a.product.createdAt) || 0);
+            return d || bySoldDesc(a, b) || byDiscountDesc(a, b);
+        });
+        return;
+    }
+
+    scored.sort((a, b) => {
+        const relevance = (b.score || 0) - (a.score || 0);
+        return relevance || bySoldDesc(a, b) || byDiscountDesc(a, b) || byRatingDesc(a, b);
+    });
 };
 
 const filterCandidates = (products, filters = {}) => {
@@ -328,6 +333,9 @@ const filterCandidates = (products, filters = {}) => {
     if (maxPrice !== undefined && maxPrice !== null && maxPrice !== "") {
         list = list.filter((p) => toNumber(p && p.price, 0) <= Number(maxPrice));
     }
+
+    // Always filter out products that are out of stock.
+    list = list.filter((p) => toNumber(p && p.stock, 1) > 0);
 
     return list;
 };
@@ -372,32 +380,51 @@ exports.searchProductsAdvanced = (products, options = {}) => {
         maxPrice,
     });
 
-    const normalizedQuery = normalizeText(search);
-    if (!normalizedQuery) {
+    const vocabulary = buildVocabulary(candidates);
+    const query = preprocessQuery(search, vocabulary);
+
+    if (!query.normalizedQuery || query.tokens.length === 0) {
         const plain = candidates.map((product) => ({ product, score: 0 }));
         sortScored(plain, sortBy);
-        const plainList = plain.map((item) => item.product);
-        return paginate(plainList, page, limit);
+        return paginate(plain.map((item) => item.product), page, limit);
     }
 
-    const coreTokens = tokenize(normalizedQuery).filter(
-        (token) => token.length >= 1 && !STOP_WORDS.has(token)
-    );
-    const expandedTokens = expandWithSynonyms(normalizedQuery);
+    const queryCategory = detectQueryCategory(query.normalizedQuery, query.tokens);
+    const semanticCandidates = queryCategory ?
+        candidates.filter((p) => String((p && p.category) || "") === String(queryCategory)) :
+        candidates;
 
-    const index = buildIndex(candidates);
-    const scored = index.docs
-        .map((doc) => {
-            const scoredDoc = scoreDocument(doc, index, expandedTokens, coreTokens);
+    const scored = semanticCandidates
+        .map((product) => {
+            const breakdown = scoreProduct(product, query.tokens);
+
+            let finalScore = breakdown.score;
+            let isValid = false;
+
+            if (queryCategory) {
+                // When query has detected category, give base score to all products in that category
+                // then add more points for token matches
+                finalScore = 5 + breakdown.score;
+                isValid = true;
+            } else {
+                // Without category detection, apply stricter validation
+                const minCoverage = query.tokens.length > 1 ? 0.5 : 1;
+                const hasStrongMatch = breakdown.titleMatches > 0 || breakdown.attributeMatches > 0;
+                isValid =
+                    breakdown.score > 0 &&
+                    breakdown.coverage >= minCoverage &&
+                    (hasStrongMatch || breakdown.score >= 10);
+                finalScore = breakdown.score;
+            }
+
             return {
-                product: doc.product,
-                score: scoredDoc.score,
-                isValid: scoredDoc.isValid,
+                product,
+                score: finalScore,
+                isValid,
             };
         })
-        .filter((item) => item.isValid && item.score > 0);
+        .filter((item) => item.isValid);
 
     sortScored(scored, sortBy);
-    const sortedProducts = scored.map((item) => item.product);
-    return paginate(sortedProducts, page, limit);
+    return paginate(scored.map((item) => item.product), page, limit);
 };
