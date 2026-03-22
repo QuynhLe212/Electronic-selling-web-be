@@ -149,6 +149,9 @@ exports.getProducts = asyncHandler(async(req, res) => {
 // @route   GET /api/products/advanced-search
 // @access  Public
 exports.getProductsAdvancedSearch = asyncHandler(async(req, res) => {
+    const ADVANCED_SEARCH_MAX_LIMIT = 30;
+    const ADVANCED_SEARCH_DEFAULT_LIMIT = 30;
+
     const {
         search = "",
             q = "",
@@ -159,9 +162,12 @@ exports.getProductsAdvancedSearch = asyncHandler(async(req, res) => {
             min_price,
             max_price,
             sort = "relevance",
-            page = 1,
-            limit = 12,
+            limit = ADVANCED_SEARCH_DEFAULT_LIMIT,
     } = req.query;
+
+    const parsedLimit = Number(limit);
+    const safeLimit = Number.isFinite(parsedLimit) ? Math.max(1, Math.min(parsedLimit, ADVANCED_SEARCH_MAX_LIMIT)) : ADVANCED_SEARCH_DEFAULT_LIMIT;
+    const safePage = 1;
 
     const dbQuery = {
         $or: [{ isActive: true }, { isActive: { $exists: false } }],
@@ -195,8 +201,8 @@ exports.getProductsAdvancedSearch = asyncHandler(async(req, res) => {
     const result = searchProductsAdvanced(candidates, {
         search: search || q,
         sort,
-        page: Number(page),
-        limit: Number(limit),
+        page: safePage,
+        limit: safeLimit,
         category,
         brand,
         minPrice: safeMinPrice,

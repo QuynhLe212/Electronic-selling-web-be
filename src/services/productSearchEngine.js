@@ -52,6 +52,27 @@ const CATEGORY_ALIASES = {
     Monitor: ["man hinh", "monitor", "screen", "display"],
 };
 
+const CATEGORY_INTENT_TOKENS = {
+    Phone: ["dien", "thoai", "phone", "smartphone", "mobile", "di", "dong"],
+    Laptop: ["laptop", "notebook", "ultrabook", "may", "tinh", "xach", "tay"],
+    Tablet: ["tablet", "may", "tinh", "bang", "tab"],
+    Accessory: ["phu", "kien", "accessory", "phu_kien"],
+    Monitor: ["man", "hinh", "monitor", "screen", "display"],
+};
+
+const CATEGORY_EXCLUSION_TOKENS = {
+    Phone: [
+        "ssd",
+        "hdd",
+        "soundbar",
+        "keyboard",
+        "mouse",
+        "router",
+        "dock",
+        "hub",
+    ],
+};
+
 const toNumber = (value, fallback = 0) => {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : fallback;
@@ -189,15 +210,22 @@ const preprocessQuery = (search, vocabulary) => {
     const normalizedQuery = normalizeText(search);
     const rawTokens = tokenize(normalizedQuery);
     const filteredTokens = rawTokens.filter((token) => !STOP_WORDS.has(token));
-    const synonymExpandedTokens = expandSynonyms(filteredTokens);
+    const correctedFilteredTokens = filteredTokens.map((token) => correctTokenWithVocabulary(token, vocabulary));
+    const synonymExpandedTokens = expandSynonyms(correctedFilteredTokens);
     const phraseExpandedTokens = expandPhraseSynonyms(normalizedQuery, synonymExpandedTokens);
     const correctedTokens = phraseExpandedTokens.map((token) => correctTokenWithVocabulary(token, vocabulary));
     const finalTokens = uniqueTokens(correctedTokens.filter((token) => !STOP_WORDS.has(token)));
 
     return {
         normalizedQuery,
+        rawTokens: uniqueTokens(correctedFilteredTokens.filter((token) => !STOP_WORDS.has(token))),
         tokens: finalTokens,
     };
+};
+
+const getCategoryIntentTokens = (category) => {
+    const baseTokens = CATEGORY_INTENT_TOKENS[category] || [];
+    return new Set(baseTokens.map((token) => normalizeText(token)));
 };
 
 const scoreProduct = (product, tokens) => {
@@ -241,6 +269,18 @@ const scoreProduct = (product, tokens) => {
         descriptionMatches,
         coverage: tokens.length > 0 ? matchedTokens.size / tokens.length : 0,
     };
+};
+
+const hasCategoryConflictTokens = (product, category) => {
+    const denied = CATEGORY_EXCLUSION_TOKENS[category] || [];
+    if (denied.length === 0) return false;
+
+    const textTokens = new Set([
+        ...tokenize(product && product.name),
+        ...tokenize(product && product.description),
+    ]);
+
+    return denied.some((token) => textTokens.has(normalizeText(token)));
 };
 
 const normalizeSort = (sortBy) => {
@@ -394,6 +434,10 @@ exports.searchProductsAdvanced = (products, options = {}) => {
         candidates.filter((p) => String((p && p.category) || "") === String(queryCategory)) :
         candidates;
 
+    const categoryIntentTokens = queryCategory ? getCategoryIntentTokens(queryCategory) : new Set();
+    const detailTokens = queryCategory ?
+        query.rawTokens.filter((token) => !categoryIntentTokens.has(token)) : [];
+
     const scored = semanticCandidates
         .map((product) => {
             const breakdown = scoreProduct(product, query.tokens);
@@ -402,13 +446,26 @@ exports.searchProductsAdvanced = (products, options = {}) => {
             let isValid = false;
 
             if (queryCategory) {
-                // When query has detected category, give base score to all products in that category
-                // then add more points for token matches
-                finalScore = 5 + breakdown.score;
-                isValid = true;
+                const hasCategoryConflict = hasCategoryConflictTokens(product, queryCategory);
+
+                // Category-only query keeps broad results inside that category.
+                if (detailTokens.length === 0) {
+                    finalScore = 5 + breakdown.score;
+                    isValid = !hasCategoryConflict;
+                } else {
+                    // Category + detail query requires detail match to remove noisy results.
+                    const detailBreakdown = scoreProduct(product, detailTokens);
+                    const hasDetailStrongMatch = detailBreakdown.titleMatches > 0 || detailBreakdown.attributeMatches > 0;
+
+                    isValid = !hasCategoryConflict &&
+                        detailBreakdown.score > 0 &&
+                        (hasDetailStrongMatch || detailBreakdown.coverage >= 0.6);
+
+                    finalScore = 5 + breakdown.score + detailBreakdown.score;
+                }
             } else {
                 // Without category detection, apply stricter validation
-                const minCoverage = query.tokens.length > 1 ? 0.5 : 1;
+                const minCoverage = query.tokens.length > 1 ? 0.6 : 1;
                 const hasStrongMatch = breakdown.titleMatches > 0 || breakdown.attributeMatches > 0;
                 isValid =
                     breakdown.score > 0 &&
